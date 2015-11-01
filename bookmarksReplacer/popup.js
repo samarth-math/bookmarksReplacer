@@ -22,7 +22,6 @@ function replaceBar(folder){
 
 //***********************************INCOMPLETE OR TEST CODE***********************************
 
-
 // Finds folder at the specified level of the tree.
 function findFolder(folderName, level, fn){
 	chrome.bookmarks.getTree(function(tree){
@@ -46,6 +45,10 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		}
 		var select = document.getElementById("selectFolder"); 
+		var newFolder = document.createElement("option");
+		newFolder.textContent = "New Folder...";
+		newFolder.value= -1;
+		select.appendChild(newFolder);
 
 		for(var i = 0; i < folderList.length; i++) {
 		    var opt = folderList[i];
@@ -57,6 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 });
 
+
 // Functionality of Replace
 document.getElementById("click").addEventListener("click", function(){
 		var a = document.getElementById("selectFolder");
@@ -67,7 +71,12 @@ document.getElementById("click").addEventListener("click", function(){
 				chrome.bookmarks.remove(bchildren[i].id);
 			}
 			//console.log(a.options[a.selectedIndex].value);
-			chrome.bookmarks.getChildren(a.options[a.selectedIndex].value, function(children){
+			var selId=a.options[a.selectedIndex].value;
+			var id;
+			if(selId!=-1){
+				id=selId;
+			}
+			chrome.bookmarks.getChildren(id, function(children){
 				//children=node.children;
 				for (var i = 0; i < children.length; i++){
 					var bMark ={};
