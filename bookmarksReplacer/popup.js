@@ -4,9 +4,9 @@
 
 
 //***********************************INCOMPLETE OR TEST CODE***********************************
-function getBookmarksBar(){
+function getBookmarksBar() {
 	/*chrome.bookmarks.get(bookmarkBar.id,function(result)){
-    	var bookmarks= document.getElementById('bookmarksBar');
+    var bookmarks = document.getElementById('bookmarksBar');
     	bookmarks.innerHTML = 'Hey there';
     });*/
 	console.log('Console messages');
