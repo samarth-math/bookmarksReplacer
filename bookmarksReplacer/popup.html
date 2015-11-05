@@ -6,7 +6,7 @@
 
     <style>
       #heading {
-        min-width: 200px;
+        min-width: 250px;
       }
       .panel{
         margin-bottom: 0px;
@@ -15,21 +15,47 @@
     </style>
   </head>
   <body >
-    <div id="heading" class="panel panel-default">
-      <div class="panel-body">
-        Choose Bookmarks Folder
-        <select id="selectFolder" size=10>
-        </select>
-      </div>
-      <div class="panel-footer">
-        <button id="click" class="btn btn-primary">Replace With</button>
-        <button id="click2" class="btn btn-primary">Save To</button>
-      </div>
-    </div>
+        <div>
+            <!-- Nav tabs -->
+          <ul class="nav nav-tabs" role="tablist">
+            <li role="nav" class="active"><a href="#replaceWith" aria-controls="replaceWith" role="tab" data-toggle="tab">Replace With</a></li>
+             <li role="nav"><a href="#saveTo" aria-controls="saveTo" role="tab" data-toggle="tab">Save To</a></li>
+          </ul>
+
+          <!-- Tab panes -->
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="replaceWith">
+                <div id="heading" class="panel panel-default">
+                    <div class="panel-body">
+                        Choose Bookmarks Folder
+                        <select id="selectFolder" size=10>
+                        </select>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <button id="click" class="btn btn-primary">Replace</button>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="saveTo">
+                <div id="heading" class="panel panel-default">
+                    <div class="panel-body">
+                        Choose Bookmarks Folder
+                        <select id="selectSFolder" size=10>
+                        </select>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <button id="click2" class="btn btn-primary">Save To</button>
+                </div>
+            </div>
+          </div>
+
+        </div>
 
 
-<script src="popup.js">
-    </script>
+<script src="jquery-2.1.4.min.js"></script>
+<script src="popup.js"></script>
+<script src="bootstrap.min.js"></script>
   </body>
 </html>
 
