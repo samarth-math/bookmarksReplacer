@@ -7,7 +7,7 @@
 function getBookmarksBar() {
 	/*chrome.bookmarks.get(bookmarkBar.id,function(result)){
     var bookmarks = document.getElementById('bookmarksBar');
-    	bookmarks.innerHTML = 'Hey there';
+    bookmarks.innerHTML = 'Hey there';
     });*/
 	console.log('Console messages');
 }
@@ -44,26 +44,63 @@ document.addEventListener('DOMContentLoaded', function() {
 				folderList.push(children[i]);
 			}
 		}
-		var select = document.getElementById("selectFolder"); 
+
+        var selectS = document.getElementById("selectSFolder");
+        var selectR = document.getElementById("selectRFolder");
 		var newFolder = document.createElement("option");
+
 		newFolder.textContent = "New Folder...";
 		newFolder.value= -1;
-		select.appendChild(newFolder);
+		selectS.appendChild(newFolder);
 
 		for(var i = 0; i < folderList.length; i++) {
 		    var opt = folderList[i];
-		    var el = document.createElement("option");
-		    el.textContent = opt.title;
-		    el.value = opt.id;
-		    select.appendChild(el);
+
+            var el1 = document.createElement("option");
+            el1.textContent = opt.title;
+            el1.value = opt.id;
+            selectS.appendChild(el1);
+
+            var el2 = document.createElement("option");
+		    el2.textContent = opt.title;
+            el2.value = opt.id;
+		    selectR.appendChild(el2);
 		}
 	});
 });
 
+// Functionality of Save
+document.getElementById("click2").addEventListener("click", function(){
+		var a = document.getElementById("selectSFolder");
+		findFolder('Bookmarks bar',0,function(bBar){
+			bchildren=bBar.children;
+			bBarId = bBar.id;
+			//console.log(a.options[a.selectedIndex].value);
+			var selId=a.options[a.selectedIndex].value;
+			var id;
+			if(selId!=-1){
+				id=selId;
+			}
+			chrome.bookmarks.getChildren(id, function(children){
+				//children=node.children;
+				for (var i = 0; i < bchildren.length; i++){
+                    console.log(bchildren[i].title, bchildren[i].url);
+					var bMark ={};
+					if (bchildren[i].url!=undefined)
+						bMark={'parentId':id, 'title':bchildren[i].title, 'url':bchildren[i].url};
+                        if(children[i]!=undefined){
+                            chrome.bookmarks.remove(children[i].id);
+                        }
+                        chrome.bookmarks.create(bMark);
+				}
+			});
+		});
+
+});
 
 // Functionality of Replace
 document.getElementById("click").addEventListener("click", function(){
-		var a = document.getElementById("selectFolder");
+		var a = document.getElementById("selectRFolder");
 		findFolder('Bookmarks bar',0,function(bBar){
 			bchildren=bBar.children;
 			bBarId = bBar.id;
@@ -71,11 +108,7 @@ document.getElementById("click").addEventListener("click", function(){
 				chrome.bookmarks.remove(bchildren[i].id);
 			}
 			//console.log(a.options[a.selectedIndex].value);
-			var selId=a.options[a.selectedIndex].value;
-			var id;
-			if(selId!=-1){
-				id=selId;
-			}
+			var id=a.options[a.selectedIndex].value;
 			chrome.bookmarks.getChildren(id, function(children){
 				//children=node.children;
 				for (var i = 0; i < children.length; i++){
