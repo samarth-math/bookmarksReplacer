@@ -59,6 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
             var el1 = document.createElement("option");
             el1.textContent = opt.title;
             el1.value = opt.id;
+
             selectS.appendChild(el1);
 
             var el2 = document.createElement("option");
@@ -70,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Functionality of Save
-document.getElementById("click2").addEventListener("click", function(){
+document.getElementById("selectSFolder").addEventListener("dblclick", function(){
 		var a = document.getElementById("selectSFolder");
 		findFolder('Bookmarks bar',0,function(bBar){
 			bchildren=bBar.children;
@@ -99,7 +100,7 @@ document.getElementById("click2").addEventListener("click", function(){
 });
 
 // Functionality of Replace
-document.getElementById("click").addEventListener("click", function(){
+document.getElementById("selectRFolder").addEventListener("dblclick", function(){
 		var a = document.getElementById("selectRFolder");
 		findFolder('Bookmarks bar',0,function(bBar){
 			bchildren=bBar.children;
