@@ -34,6 +34,30 @@ function findFolder(folderName, level, fn){
 	});
 }
 
+function replicateTree(treefromId, bMark){
+    chrome.bookmarks.create(bMark, function(currentNode){
+        treeToId = currentNode.id;
+        chrome.bookmarks.getSubTree(treefromId, function(tree){
+            var children = tree[0].children;
+            for (i =0; i < children.length; i++) {
+                var bMark ={};
+                if (children[i].url!=undefined){
+                    bMark={'parentId':treeToId, 'title':children[i].title, 'url':children[i].url};
+                    chrome.bookmarks.create(bMark);
+                }
+                else{
+                    bMark={'parentId':treeToId, 'title':children[i].title};
+                    chrome.bookmarks.create(bMark, function(currentNode){
+                        replicateTree(children[i].id, currentNode.id);
+                        console.log(currentNode.id);
+                    });
+                }
+            }
+        });
+    });
+
+}
+
 //Loads the folders present in other bookmarks.
 document.addEventListener('DOMContentLoaded', function() {
 	findFolder('Other bookmarks',0,function(btNode){
@@ -85,7 +109,6 @@ document.getElementById("selectSFolder").addEventListener("dblclick", function()
 			chrome.bookmarks.getChildren(id, function(children){
 				//children=node.children;
 				for (var i = 0; i < bchildren.length; i++){
-                    console.log(bchildren[i].title, bchildren[i].url);
 					var bMark ={};
 					if (bchildren[i].url!=undefined)
 						bMark={'parentId':id, 'title':bchildren[i].title, 'url':bchildren[i].url};
@@ -106,7 +129,10 @@ document.getElementById("selectRFolder").addEventListener("dblclick", function()
 			bchildren=bBar.children;
 			bBarId = bBar.id;
 			for (var i = 0; i < bchildren.length; i++){
-				chrome.bookmarks.remove(bchildren[i].id);
+                if(bchildren[i].url!=undefined)
+				    chrome.bookmarks.remove(bchildren[i].id);
+                else
+                    chrome.bookmarks.removeTree(bchildren[i].id);
 			}
 			//console.log(a.options[a.selectedIndex].value);
 			var id=a.options[a.selectedIndex].value;
@@ -114,9 +140,16 @@ document.getElementById("selectRFolder").addEventListener("dblclick", function()
 				//children=node.children;
 				for (var i = 0; i < children.length; i++){
 					var bMark ={};
-					if (children[i].url)
+					if (children[i].url!=undefined){
 						bMark={'parentId':bBarId, 'title':children[i].title, 'url':children[i].url};
-					chrome.bookmarks.create(bMark);
+                        chrome.bookmarks.create(bMark);
+                    }
+                    else{
+                        bMark={'parentId':bBarId, 'title':children[i].title};
+                        console.log(children[i].id);
+                        replicateTree(children[i].id, bMark)
+                    }
+
 				}
 			});
 		});
