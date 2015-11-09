@@ -106,6 +106,7 @@ document.getElementById("selectSFolder").addEventListener("dblclick", function()
 			if(selId!=-1){
 				id=selId;
 			}
+            //Make Stack, and put chrome.bookmarks.getTree(id) into it.
 			chrome.bookmarks.getChildren(id, function(children){
 				//children=node.children;
 				for (var i = 0; i < bchildren.length; i++){
@@ -113,7 +114,10 @@ document.getElementById("selectSFolder").addEventListener("dblclick", function()
 					if (bchildren[i].url!=undefined)
 						bMark={'parentId':id, 'title':bchildren[i].title, 'url':bchildren[i].url};
                         if(children[i]!=undefined){
-                            chrome.bookmarks.remove(children[i].id);
+                            if(children[i].url!=undefined)
+                                chrome.bookmarks.remove(children[i].id);
+                            else
+                                chrome.bookmarks.removeTree(children[i].id);
                         }
                         chrome.bookmarks.create(bMark);
 				}
@@ -146,7 +150,6 @@ document.getElementById("selectRFolder").addEventListener("dblclick", function()
                     }
                     else{
                         bMark={'parentId':bBarId, 'title':children[i].title};
-                        console.log(children[i].id);
                         replicateTree(children[i].id, bMark)
                     }
 
