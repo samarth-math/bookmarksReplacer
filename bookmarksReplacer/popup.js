@@ -2,25 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-//***********************************INCOMPLETE OR TEST CODE***********************************
-function getBookmarksBar() {
-	/*chrome.bookmarks.get(bookmarkBar.id,function(result)){
-    var bookmarks = document.getElementById('bookmarksBar');
-    bookmarks.innerHTML = 'Hey there';
-    });*/
-	console.log('Console messages');
-}
-
-function replaceBar(folder){
-	chrome.bookmarks.getChildren('1',function (result){
-		var toRemove = result[11].id;
-		console.log(result[11]);
-		chrome.bookmarks.remove(toRemove);
-	});
-}
-
-//***********************************INCOMPLETE OR TEST CODE***********************************
+// Initialization
+var undoStack = [];
 
 // Finds folder at the specified level of the tree.
 function findFolder(folderName, level, fn){
@@ -94,35 +77,53 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 });
 
+
 // Functionality of Save
 document.getElementById("selectSFolder").addEventListener("dblclick", function(){
-		var a = document.getElementById("selectSFolder");
-		findFolder('Bookmarks bar',0,function(bBar){
-			bchildren=bBar.children;
-			bBarId = bBar.id;
-			//console.log(a.options[a.selectedIndex].value);
-			var selId=a.options[a.selectedIndex].value;
-			var id;
-			if(selId!=-1){
-				id=selId;
-			}
-            //Make Stack, and put chrome.bookmarks.getTree(id) into it.
-			chrome.bookmarks.getChildren(id, function(children){
-				//children=node.children;
-				for (var i = 0; i < bchildren.length; i++){
-					var bMark ={};
-					if (bchildren[i].url!=undefined)
-						bMark={'parentId':id, 'title':bchildren[i].title, 'url':bchildren[i].url};
-                        if(children[i]!=undefined){
-                            if(children[i].url!=undefined)
-                                chrome.bookmarks.remove(children[i].id);
-                            else
-                                chrome.bookmarks.removeTree(children[i].id);
-                        }
-                        chrome.bookmarks.create(bMark);
-				}
-			});
-		});
+    var a = document.getElementById("selectSFolder");
+    var title = a.options[a.selectedIndex].innerHTML;
+    var selId=a.options[a.selectedIndex].value;
+    document.getElementById("save-footer").innerHTML = "Are you sure you wanna overwrite \""+title+"\"? <span class=\"pointer\" id=\"yes\"><a>Yes</a></span> <span class=\"pointer\"  id=\"no\"><a>No</a></span>";
+    document.getElementById("yes").addEventListener("click", function(){
+	   findFolder('Bookmarks bar',0,function(bBar){
+		bchildren=bBar.children;
+        bBarId = bBar.id;
+        //console.log(a.options[a.selectedIndex].value);
+
+        var id;
+        if(selId!=-1){
+            id=selId;
+        }
+        chrome.bookmarks.getSubTree(id, function(treeNode){
+            undoStack.push(treeNode);
+        });
+        chrome.bookmarks.getChildren(id, function(children){
+            for (var i = 0; i < bchildren.length; i++){
+                var bMark ={};
+                if (bchildren[i].url!=undefined){
+                    bMark={'parentId':id, 'title':bchildren[i].title, 'url':bchildren[i].url};
+                    chrome.bookmarks.create(bMark);
+                }
+                else {
+                    bMark={'parentId':id, 'title':bchildren[i].title};
+                    replicateTree(bchildren[i].id, bMark)
+                }
+
+                    if(children[i]!=undefined){
+                        if(children[i].url!=undefined)
+                            chrome.bookmarks.remove(children[i].id);
+                        else
+                            chrome.bookmarks.removeTree(children[i].id);
+                    }
+            }
+            document.getElementById("save-footer").innerHTML = " Saved";
+        });
+       });
+    });
+
+    document.getElementById("no").addEventListener("click", function(){
+        document.getElementById("save-footer").innerHTML = " Cancelled";
+    });
 
 });
 
@@ -158,14 +159,4 @@ document.getElementById("selectRFolder").addEventListener("dblclick", function()
 		});
 
 });
-/**
- * @param {string} searchTerm - Search term for Google Image search.
- * @param {function(string,number,number)} callback - Called when an image has
- *   been found. The callback gets the URL, width and height of the image.
- * @param {function(string)} errorCallback - Called when the image is not found.
- *   The callback gets a string that describes the failure reason.
- */
 
-
-
-getBookmarksBar();

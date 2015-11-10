@@ -384,15 +384,18 @@
     "grid.less",
     "forms.less",
     "buttons.less",
+    "glyphicons.less",
     "navs.less",
     "navbar.less",
-    "list-group.less",
+    "labels.less",
     "panels.less",
-    "wells.less",
-    "tooltip.less"
+    "tooltip.less",
+    "popovers.less"
   ],
   "js": [
+    "tooltip.js",
+    "popover.js",
     "tab.js"
   ],
-  "customizerUrl": "http://getbootstrap.com/customize/?id=0413722e176329c2c0fa"
+  "customizerUrl": "http://getbootstrap.com/customize/?id=ea25dc76d9dbd2d44b2a"
 }

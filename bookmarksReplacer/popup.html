@@ -19,6 +19,9 @@
             margin-bottom: 0px;
             padding-bottom: 0px;
         }
+        .pointer {
+            cursor: pointer;
+        }
     </style>
   </head>
   <body >
@@ -34,7 +37,6 @@
             <div role="tabpanel" class="tab-pane active" id="replaceWith">
                 <div id="heading" class="panel panel-default">
                     <div class="panel-body">
-                        Choose Bookmarks Folder
                         <select id="selectRFolder" size=10>
                         </select>
                     </div>
@@ -46,12 +48,11 @@
             <div role="tabpanel" class="tab-pane" id="saveTo">
                 <div id="heading" class="panel panel-default">
                     <div class="panel-body">
-                        Choose Bookmarks Folder
                         <select id="selectSFolder" size=10>
                         </select>
                     </div>
                 </div>
-                <div class="panel-footer">
+                <div class="panel-footer" id="save-footer">
                     Double Click to save
                 </div>
             </div>
