@@ -20,6 +20,8 @@ function findFolder(folderName, level, fn){
 function replicateTree(treefromId, bMark){
     chrome.bookmarks.create(bMark, function(currentNode){
         treeToId = currentNode.id;
+        console.log(treefromId);
+        console.log(treeToId);
         chrome.bookmarks.getSubTree(treefromId, function(tree){
             var children = tree[0].children;
             for (i =0; i < children.length; i++) {
@@ -42,7 +44,7 @@ function replicateTree(treefromId, bMark){
 }
 
 //Loads the folders present in other bookmarks.
-document.addEventListener('DOMContentLoaded', function() {
+init = function() {
 	findFolder('Other bookmarks',0,function(btNode){
 		var folderList=[];
 		var children=btNode.children;
@@ -75,7 +77,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		    selectR.appendChild(el2);
 		}
 	});
-});
+}
+document.addEventListener('DOMContentLoaded', init());
 
 
 // Functionality of Save
@@ -83,47 +86,68 @@ document.getElementById("selectSFolder").addEventListener("dblclick", function()
     var a = document.getElementById("selectSFolder");
     var title = a.options[a.selectedIndex].innerHTML;
     var selId=a.options[a.selectedIndex].value;
-    document.getElementById("save-footer").innerHTML = "Are you sure you wanna overwrite \""+title+"\"? <span class=\"pointer\" id=\"yes\"><a>Yes</a></span> <span class=\"pointer\"  id=\"no\"><a>No</a></span>";
-    document.getElementById("yes").addEventListener("click", function(){
-	   findFolder('Bookmarks bar',0,function(bBar){
-		bchildren=bBar.children;
-        bBarId = bBar.id;
-        //console.log(a.options[a.selectedIndex].value);
+    if(selId!=-1){
+        document.getElementById("save-footer").innerHTML = "Are you sure you wanna overwrite \""+title+"\"? <br/><span class=\"pointer\" id=\"yes\"><a>Yes</a></span> <span class=\"pointer\"  id=\"no\"><a>No</a></span>";
+        document.getElementById("yes").addEventListener("click", function(){
+           findFolder('Bookmarks bar',0,function(bBar){
+            bchildren=bBar.children;
+            bBarId = bBar.id;
+            //console.log(a.options[a.selectedIndex].value);
 
-        var id;
-        if(selId!=-1){
+            var id;
             id=selId;
-        }
-        chrome.bookmarks.getSubTree(id, function(treeNode){
-            undoStack.push(treeNode);
-        });
-        chrome.bookmarks.getChildren(id, function(children){
-            for (var i = 0; i < bchildren.length; i++){
-                var bMark ={};
-                if (bchildren[i].url!=undefined){
-                    bMark={'parentId':id, 'title':bchildren[i].title, 'url':bchildren[i].url};
-                    chrome.bookmarks.create(bMark);
-                }
-                else {
-                    bMark={'parentId':id, 'title':bchildren[i].title};
-                    replicateTree(bchildren[i].id, bMark)
-                }
-
-                    if(children[i]!=undefined){
-                        if(children[i].url!=undefined)
-                            chrome.bookmarks.remove(children[i].id);
-                        else
-                            chrome.bookmarks.removeTree(children[i].id);
+            chrome.bookmarks.getSubTree(id, function(treeNode){
+                undoStack.push(treeNode);
+            });
+            chrome.bookmarks.getChildren(id, function(children){
+                for (var i = 0; i < bchildren.length; i++){
+                    var bMark ={};
+                    if (bchildren[i].url!=undefined){
+                        bMark={'parentId':id, 'title':bchildren[i].title, 'url':bchildren[i].url};
+                        chrome.bookmarks.create(bMark);
                     }
-            }
-            document.getElementById("save-footer").innerHTML = " Saved";
-        });
-       });
-    });
+                    else {
+                        bMark={'parentId':id, 'title':bchildren[i].title};
+                        replicateTree(bchildren[i].id, bMark)
+                    }
 
-    document.getElementById("no").addEventListener("click", function(){
-        document.getElementById("save-footer").innerHTML = " Cancelled";
-    });
+                        if(children[i]!=undefined){
+                            if(children[i].url!=undefined)
+                                chrome.bookmarks.remove(children[i].id);
+                            else
+                                chrome.bookmarks.removeTree(children[i].id);
+                        }
+                }
+                document.getElementById("save-footer").innerHTML = " <div class=\"alert alert-success\" role=\"alert\"><b>Saved</b></span>";
+            });
+           });
+        });
+
+        document.getElementById("no").addEventListener("click", function(){
+            document.getElementById("save-footer").innerHTML = " <div class=\"alert alert-warning\"  role=\"alert\"><b>Cancelled</b></span>";
+        });
+    }
+    else{
+        document.getElementById("save-footer").innerHTML = "<input id=\"newFolder\" type=\"text\"> <div id=\"newFButton\" class=\"btn btn-primary btn-xs\"> Create</div>";
+        document.getElementById("newFButton").addEventListener("click",function(){
+            var folderName = document.getElementById("newFolder").value;
+            var otherBId;
+            var id;
+            findFolder('Other bookmarks',0,function(otherBookmarks){
+                otherBId = otherBookmarks.id;
+                console.log(otherBId);
+                findFolder('Bookmarks bar',0,function(bBar){
+                    bchildren=bBar.children;
+                    bBarId = bBar.id;
+                    bMark={'parentId':otherBId, 'title':folderName};
+                    replicateTree(bBarId,bMark);
+                    document.getElementById("save-footer").innerHTML = " <div class=\"alert alert-success\" role=\"alert\"><b>Saved</b></span>";
+                    init();
+                });
+           });
+        });
+    }
+
 
 });
 
@@ -159,4 +183,3 @@ document.getElementById("selectRFolder").addEventListener("dblclick", function()
 		});
 
 });
-
