@@ -80,6 +80,9 @@ init = function() {
 }
 document.addEventListener('DOMContentLoaded', init());
 
+document.getElementById("selectSFolder").addEventListener("click", function(){
+    document.getElementById("save-footer").innerHTML = "<a class=\"btn btn-primary btn-lg\"><span class=\"glyphicon glyphicon-remove\"></span></a>";
+});
 
 // Functionality of Save
 document.getElementById("selectSFolder").addEventListener("dblclick", function(){
