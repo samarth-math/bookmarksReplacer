@@ -58,6 +58,8 @@ init = function() {
         var selectR = document.getElementById("selectRFolder");
 		var newFolder = document.createElement("option");
 
+        selectS.innerHTML ='';
+        selectR.innerHTML ='';
 		newFolder.textContent = "New Folder...";
 		newFolder.value= -1;
 		selectS.appendChild(newFolder);
@@ -80,9 +82,33 @@ init = function() {
 }
 document.addEventListener('DOMContentLoaded', init());
 
+// Delete Folder
 document.getElementById("selectSFolder").addEventListener("click", function(){
-    document.getElementById("save-footer").innerHTML = "<a class=\"btn btn-danger btn-xs\" title=\"Delete Folder\"><span class=\"glyphicon glyphicon-remove\"></span></a>";
+    var a = document.getElementById("selectSFolder");
+    var title = a.options[a.selectedIndex].innerHTML;
+    var selId=a.options[a.selectedIndex].value;
+    if (selId!=-1){
+        document.getElementById("save-footer").innerHTML = "<a class=\"btn btn-danger btn-xs\" title=\"Delete Folder\" id=\"delYes\"><span class=\"glyphicon glyphicon-remove\"></span></a>";
+    }
+    document.getElementById('delYes').addEventListener('click', function(){
+    var a = document.getElementById("selectSFolder");
+    var title = a.options[a.selectedIndex].innerHTML;
+    var selId=a.options[a.selectedIndex].value;
+    if(selId!=-1){
+        document.getElementById("save-footer").innerHTML = "Are you sure you want to delete \""+title+"\"? <br/><span class=\"pointer\"                     id=\"del\"><a>Yes</a></span> <span class=\"pointer\"  id=\"no\"><a>No</a></span>";
+    }
+
+    document.getElementById('del').addEventListener('click', function(){
+        document.getElementById("save-footer").innerHTML = " <div class=\"alert alert-danger\" role=\"alert\"><b>Deleted</b></span>";
+        chrome.bookmarks.removeTree(selId);
+        init();
+    });
+
+    });
+
+
 });
+
 
 // Functionality of Save
 document.getElementById("selectSFolder").addEventListener("dblclick", function(){
