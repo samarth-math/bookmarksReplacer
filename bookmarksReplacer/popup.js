@@ -88,7 +88,10 @@ document.getElementById("selectSFolder").addEventListener("click", function(){
     var title = a.options[a.selectedIndex].innerHTML;
     var selId=a.options[a.selectedIndex].value;
     if (selId!=-1){
-        document.getElementById("save-footer").innerHTML = "<a style=\"color:red\" title=\"Delete Folder\" id=\"delYes\"><span class=\"glyphicon glyphicon-remove\"></span></a>";
+        document.getElementById("save-footer").innerHTML = "<a style=\"color:red;cursor:pointer\" title=\"Delete Folder\" id=\"delYes\"><i class=\"fa fa-minus-circle\"></i></a>";
+    }
+    else{
+        document.getElementById("save-footer").innerHTML = "Double Click to save to Folder";
     }
     document.getElementById('delYes').addEventListener('click', function(){
     var a = document.getElementById("selectSFolder");
@@ -99,12 +102,12 @@ document.getElementById("selectSFolder").addEventListener("click", function(){
     }
 
     document.getElementById('del').addEventListener('click', function(){
-        document.getElementById("save-footer").innerHTML = " <div class=\"alert alert-danger\" role=\"alert\"><b>Deleted</b></span>";
+        document.getElementById("save-footer").innerHTML = " <div class=\"alert alert-danger\" role=\"alert\"><i class=\"fa fa-exclamation-circle\"></i> <b>Deleted</b></span>";
         chrome.bookmarks.removeTree(selId);
         init();
     });
         document.getElementById("nodel").addEventListener("click", function(){
-            document.getElementById("save-footer").innerHTML = " <div class=\"alert alert-warning\"  role=\"alert\"><b>Cancelled</b></span>";
+            document.getElementById("save-footer").innerHTML = " <div class=\"alert alert-warning\"  role=\"alert\"><i class=\"fa fa-exclamation-circle\"></i> <b>Cancelled</b></span>";
             init();
         });
 
@@ -151,13 +154,13 @@ document.getElementById("selectSFolder").addEventListener("dblclick", function()
                                 chrome.bookmarks.removeTree(children[i].id);
                         }
                 }
-                document.getElementById("save-footer").innerHTML = " <div class=\"alert alert-success\" role=\"alert\"><b>Saved</b></span>";
+                document.getElementById("save-footer").innerHTML = " <div class=\"alert alert-success\" role=\"alert\"><i class=\"fa fa-check-circle\"></i> <b>Saved</b></div>";
             });
            });
         });
 
         document.getElementById("no").addEventListener("click", function(){
-            document.getElementById("save-footer").innerHTML = " <div class=\"alert alert-warning\"  role=\"alert\"><b>Cancelled</b></span>";
+            document.getElementById("save-footer").innerHTML = " <div class=\"alert alert-warning\"  role=\"alert\"><i class=\"fa fa-exclamation-circle\"></i> <b>Cancelled</b></div>";
         });
     }
     else{
@@ -174,7 +177,7 @@ document.getElementById("selectSFolder").addEventListener("dblclick", function()
                     bBarId = bBar.id;
                     bMark={'parentId':otherBId, 'title':folderName};
                     replicateTree(bBarId,bMark);
-                    document.getElementById("save-footer").innerHTML = " <div class=\"alert alert-success\" role=\"alert\"><b>Saved</b></span>";
+                    document.getElementById("save-footer").innerHTML = " <div class=\"alert alert-success\" role=\"alert\"><i class=\"fa fa-check-circle\"></i> <b>Saved</b></div>";
                     init();
                 });
            });
