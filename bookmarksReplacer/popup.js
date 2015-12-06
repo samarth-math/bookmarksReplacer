@@ -88,14 +88,14 @@ document.getElementById("selectSFolder").addEventListener("click", function(){
     var title = a.options[a.selectedIndex].innerHTML;
     var selId=a.options[a.selectedIndex].value;
     if (selId!=-1){
-        document.getElementById("save-footer").innerHTML = "<a class=\"btn btn-danger btn-xs\" title=\"Delete Folder\" id=\"delYes\"><span class=\"glyphicon glyphicon-remove\"></span></a>";
+        document.getElementById("save-footer").innerHTML = "<a style=\"color:red\" title=\"Delete Folder\" id=\"delYes\"><span class=\"glyphicon glyphicon-remove\"></span></a>";
     }
     document.getElementById('delYes').addEventListener('click', function(){
     var a = document.getElementById("selectSFolder");
     var title = a.options[a.selectedIndex].innerHTML;
     var selId=a.options[a.selectedIndex].value;
     if(selId!=-1){
-        document.getElementById("save-footer").innerHTML = "Are you sure you want to delete \""+title+"\"? <br/><span class=\"pointer\"                     id=\"del\"><a>Yes</a></span> <span class=\"pointer\"  id=\"no\"><a>No</a></span>";
+        document.getElementById("save-footer").innerHTML = "Are you sure you want to delete \""+title+"\"? <br/><span class=\"pointer\"                     id=\"del\"><a>Yes</a></span> <span class=\"pointer\"  id=\"nodel\"><a>No</a></span>";
     }
 
     document.getElementById('del').addEventListener('click', function(){
@@ -103,6 +103,10 @@ document.getElementById("selectSFolder").addEventListener("click", function(){
         chrome.bookmarks.removeTree(selId);
         init();
     });
+        document.getElementById("nodel").addEventListener("click", function(){
+            document.getElementById("save-footer").innerHTML = " <div class=\"alert alert-warning\"  role=\"alert\"><b>Cancelled</b></span>";
+            init();
+        });
 
     });
 
