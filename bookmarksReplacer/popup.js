@@ -138,7 +138,7 @@ document.getElementById("selectSFolder").addEventListener("dblclick", function()
             chrome.bookmarks.getChildren(id, function(children){
                 for (var i = 0; i < bchildren.length; i++){
                     var bMark ={};
-                    if (bchildren[i].url!=undefined){
+                    if (bchildren[i].url!=undefined && bchildren[i].url!=''){
                         bMark={'parentId':id, 'title':bchildren[i].title, 'url':bchildren[i].url};
                         chrome.bookmarks.create(bMark);
                     }
@@ -147,7 +147,7 @@ document.getElementById("selectSFolder").addEventListener("dblclick", function()
                         replicateTree(bchildren[i].id, bMark)
                     }
 
-                        if(children[i]!=undefined){
+                        if(children[i]!=undefined && bchildren[i].url!=''){
                             if(children[i].url!=undefined)
                                 chrome.bookmarks.remove(children[i].id);
                             else
