@@ -147,8 +147,8 @@ document.getElementById("selectSFolder").addEventListener("dblclick", function()
                         replicateTree(bchildren[i].id, bMark)
                     }
 
-                        if(children[i]!=undefined && bchildren[i].url!=''){
-                            if(children[i].url!=undefined)
+                        if(children[i]!=undefined && children[i]!=''){
+                            if(children[i].url!=undefined && children[i].url!='')
                                 chrome.bookmarks.remove(children[i].id);
                             else
                                 chrome.bookmarks.removeTree(children[i].id);
