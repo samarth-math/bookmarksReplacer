@@ -85,7 +85,7 @@ document.getElementById("selectSFolder").addEventListener("click", function(){
     var title = a.options[a.selectedIndex].innerHTML;
     var selId=a.options[a.selectedIndex].value;
     if (selId!=-1){
-        document.getElementById("save-footer").innerHTML = "<a style=\"color:red;cursor:pointer\" title=\"Delete Folder\" id=\"delYes\"><i class=\"fa fa-minus-circle\"></i></a>";
+        document.getElementById("save-footer").innerHTML = "<a style=\"cursor:pointer\" title=\"Delete Folder\" id=\"delYes\"><i class=\"fa fa-trash fa-lg\"></i></a>";
     }
     else{
         document.getElementById("save-footer").innerHTML = "Double Click to save to Folder";
