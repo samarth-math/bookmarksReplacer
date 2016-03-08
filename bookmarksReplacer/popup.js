@@ -20,6 +20,7 @@ function findFolder(folderName, level, fn){
 function replicateTree(treefromId, bMark){
     chrome.bookmarks.create(bMark, function(currentNode){
         treeToId = currentNode.id;
+        console.log(currentNode.id);
         console.log(treefromId);
         console.log(treeToId);
         chrome.bookmarks.getSubTree(treefromId, function(tree){
@@ -122,7 +123,7 @@ document.getElementById("selectSFolder").addEventListener("dblclick", function()
     var a = document.getElementById("selectSFolder");
     var title = a.options[a.selectedIndex].innerHTML;
     var selId=a.options[a.selectedIndex].value;
-    if(selId!=-1){
+    if(selId!=-1){// Not trying to create a folder
         document.getElementById("save-footer").innerHTML = "Are you sure you wanna overwrite \""+title+"\"? <br/><span class=\"pointer\" id=\"yes\"><a>Yes</a></span> <span class=\"pointer\"  id=\"no\"><a>No</a></span>";
         document.getElementById("yes").addEventListener("click", function(){
            findFolder('Bookmarks bar',0,function(bBar){
@@ -134,7 +135,8 @@ document.getElementById("selectSFolder").addEventListener("dblclick", function()
             id=selId;
             chrome.bookmarks.getSubTree(id, function(treeNode){
                 undoStack.push(treeNode);
-            });
+            });//Future for undo functionality..!
+
             chrome.bookmarks.getChildren(id, function(children){
                 for (var i = 0; i < bchildren.length; i++){
                     var bMark ={};
@@ -142,7 +144,7 @@ document.getElementById("selectSFolder").addEventListener("dblclick", function()
                         bMark={'parentId':id, 'title':bchildren[i].title, 'url':bchildren[i].url};
                         chrome.bookmarks.create(bMark);
                     }
-                    else {
+                    else {// Make the folder with all the shit inside
                         bMark={'parentId':id, 'title':bchildren[i].title};
                         replicateTree(bchildren[i].id, bMark)
                     }
