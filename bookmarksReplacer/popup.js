@@ -19,24 +19,20 @@ function findFolder(folderName, level, fn){
 
 function replicateTree(treefromId, bMark){
     chrome.bookmarks.create(bMark, function(currentNode){
-        treeToId = currentNode.id;
-        console.log(currentNode.id);
-        console.log(treefromId);
-        console.log(treeToId);
         chrome.bookmarks.getSubTree(treefromId, function(tree){
             var children = tree[0].children;
             for (i =0; i < children.length; i++) {
-                var bMark ={};
-                if (children[i].url!=undefined){
-                    bMark={'parentId':treeToId, 'title':children[i].title, 'url':children[i].url};
+                //var bMark ={};
+                if (children[i].url!=undefined && children[i].url!=''){
+                    var bMark ={};
+                    bMark={'parentId':currentNode.id, 'title':children[i].title, 'url':children[i].url};
                     chrome.bookmarks.create(bMark);
                 }
                 else{
-                    bMark={'parentId':treeToId, 'title':children[i].title};
-                    chrome.bookmarks.create(bMark, function(currentNode){
-                        replicateTree(children[i].id, currentNode.id);
-                        console.log(currentNode.id);
-                    });
+                    var bMark ={};
+                    console.log("ttid -- ",currentNode.id);
+                    bMark={'parentId':currentNode.id, 'title':children[i].title};
+                        replicateTree(children[i].id, bMark);
                 }
             }
         });
