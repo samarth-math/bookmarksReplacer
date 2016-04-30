@@ -8,9 +8,10 @@ var undoStack = [];
 // Finds folder at the specified level of the tree.
 function findFolder(folderName, level, fn){
 	chrome.bookmarks.getTree(function(tree){
+        console.log(tree);
 		var children = tree[level].children;
 		for (i =0; i < children.length; i++) {
-			if(children[i].title==folderName){
+			if(children[i].title.toUpperCase()===folderName.toUpperCase()){
 				fn(children[i]);
 			}
 		}
@@ -42,15 +43,17 @@ function replicateTree(treefromId, bMark){
 
 //Loads the folders present in other bookmarks.
 init = function() {
-	findFolder('Other bookmarks',0,function(btNode){
+	//findFolder('Other bookmarks',0,function(btNode){
+        chrome.bookmarks.getTree(function(tree){
+        var btNode = tree[0].children[1]
 		var folderList=[];
 		var children=btNode.children;
+    //Other bookmarks folder
 		for (i =0; i < children.length; i++) {
 			if(!children[i].url){
 				folderList.push(children[i]);
 			}
 		}
-
         var selectS = document.getElementById("selectSFolder");
         var selectR = document.getElementById("selectRFolder");
 		var newFolder = document.createElement("option");
@@ -60,7 +63,6 @@ init = function() {
 		newFolder.textContent = "New Folder...";
 		newFolder.value= -1;
 		selectS.appendChild(newFolder);
-
 		for(var i = 0; i < folderList.length; i++) {
 		    var opt = folderList[i];
 
