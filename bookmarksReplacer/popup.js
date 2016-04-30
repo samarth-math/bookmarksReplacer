@@ -11,7 +11,7 @@ function findFolder(folderName, level, fn){
         console.log(tree);
 		var children = tree[level].children;
 		for (i =0; i < children.length; i++) {
-			if(children[i].title===folderName){
+			if(children[i].title==folderName){
 				fn(children[i]);
 			}
 		}
