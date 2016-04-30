@@ -8,7 +8,6 @@ var undoStack = [];
 // Finds folder at the specified level of the tree.
 function findFolder(folderName, level, fn){
 	chrome.bookmarks.getTree(function(tree){
-        console.log(tree);
 		var children = tree[level].children;
 		for (i =0; i < children.length; i++) {
 			if(children[i].title==folderName){
@@ -45,7 +44,7 @@ function replicateTree(treefromId, bMark){
 init = function() {
 	//findFolder('Other bookmarks',0,function(btNode){
         chrome.bookmarks.getTree(function(tree){
-        var btNode = tree[0].children[1]
+        var btNode = tree[0].children[1];
 		var folderList=[];
 		var children=btNode.children;
     //Other bookmarks folder
@@ -124,7 +123,9 @@ document.getElementById("selectSFolder").addEventListener("dblclick", function()
     if(selId!=-1){// Not trying to create a folder
         document.getElementById("save-footer").innerHTML = "Are you sure you wanna overwrite \""+title+"\"? <br/><span class=\"pointer\" id=\"yes\"><a>Yes</a></span> <span class=\"pointer\"  id=\"no\"><a>No</a></span>";
         document.getElementById("yes").addEventListener("click", function(){
-           findFolder('Bookmarks bar',0,function(bBar){
+           //findFolder('Bookmarks bar',0,function(bBar){
+            chrome.bookmarks.getTree(function(tree){
+            var bBar = tree[0].children[0];
             bchildren=bBar.children;
             bBarId = bBar.id;
             //console.log(a.options[a.selectedIndex].value);
@@ -169,10 +170,14 @@ document.getElementById("selectSFolder").addEventListener("dblclick", function()
             var folderName = document.getElementById("newFolder").value;
             var otherBId;
             var id;
-            findFolder('Other bookmarks',0,function(otherBookmarks){
+            //findFolder('Other bookmarks',0,function(otherBookmarks){
+            chrome.bookmarks.getTree(function(tree){
+            var otherBookmarks = tree[0].children[1];
                 otherBId = otherBookmarks.id;
                 console.log(otherBId);
-                findFolder('Bookmarks bar',0,function(bBar){
+                //findFolder('Bookmarks bar',0,function(bBar){
+                chrome.bookmarks.getTree(function(tree){
+                var bBar = tree[0].children[0];
                     bchildren=bBar.children;
                     bBarId = bBar.id;
                     bMark={'parentId':otherBId, 'title':folderName};
@@ -190,7 +195,9 @@ document.getElementById("selectSFolder").addEventListener("dblclick", function()
 // Functionality of Replace
 document.getElementById("selectRFolder").addEventListener("dblclick", function(){
 		var a = document.getElementById("selectRFolder");
-		findFolder('Bookmarks bar',0,function(bBar){
+		//findFolder('Bookmarks bar',0,function(bBar){
+        chrome.bookmarks.getTree(function(tree){
+            var bBar = tree[0].children[0];
 			bchildren=bBar.children;
 			bBarId = bBar.id;
 			for (var i = 0; i < bchildren.length; i++){
