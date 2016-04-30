@@ -147,13 +147,14 @@ document.getElementById("selectSFolder").addEventListener("dblclick", function()
                         bMark={'parentId':id, 'title':bchildren[i].title};
                         replicateTree(bchildren[i].id, bMark)
                     }
-
-                        if(children[i]!=undefined && children[i]!=''){
-                            if(children[i].url!=undefined && children[i].url!='')
-                                chrome.bookmarks.remove(children[i].id);
-                            else
-                                chrome.bookmarks.removeTree(children[i].id);
-                        }
+                }
+                for (var j=0; j<children.length; j++){
+                    //if(children[j]!=undefined && children[j]!=''){
+                        if(children[j].url!=undefined && children[j].url!='')
+                            chrome.bookmarks.remove(children[j].id);
+                        else
+                            chrome.bookmarks.removeTree(children[j].id);
+                    //}
                 }
                 document.getElementById("save-footer").innerHTML = " <div class=\"alert alert-success\" role=\"alert\"><i class=\"fa fa-check-circle\"></i> <b>Saved</b></div>";
             });
